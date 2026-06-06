@@ -22,27 +22,11 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Show environment info
-      run: |
-        echo "=== Working directory ==="
-        pwd
-        ls -la
-        echo "=== Java version ==="
-        java -version
-        echo "=== XiaoAnAssistant contents ==="
-        ls -la XiaoAnAssistant/
-        echo "=== App contents ==="
-        ls -la XiaoAnAssistant/app/
-        echo "=== Java sources ==="
-        find XiaoAnAssistant/app/src -type f -name "*.java" -o -name "*.xml" -o -name "*.kt" | head -20
-
     - name: Make gradlew executable
       working-directory: XiaoAnAssistant
       run: |
         chmod +x gradlew
         ls -la gradlew
-        file gradlew
-        head -3 gradlew
 
     - name: Check local.properties (auto-generate if missing)
       working-directory: XiaoAnAssistant
@@ -54,18 +38,36 @@ jobs:
 
     - name: Build Debug APK
       working-directory: XiaoAnAssistant
-      run: ./gradlew assembleDebug --no-daemon --stacktrace --info 2>&1 | tail -200
+      run: ./gradlew assembleDebug --no-daemon
 
-    - name: List build outputs
+    - name: Find APK file
+      id: find_apk
       run: |
-        echo "=== APK files ==="
-        find XiaoAnAssistant -name "*.apk" -type f 2>/dev/null
-        echo "=== Build directory ==="
-        ls -la XiaoAnAssistant/app/build/outputs/apk/debug/ 2>/dev/null || echo "No debug output"
+        echo "=== Searching for APK ==="
+        find XiaoAnAssistant -name "*.apk" -type f
+        APK_PATH=$(find XiaoAnAssistant -name "app-debug.apk" -type f | head -1)
+        echo "apk_path=$APK_PATH" >> $GITHUB_OUTPUT
+        echo "APK_PATH=$APK_PATH"
+        ls -la "$APK_PATH"
+        # Copy to root for easy access
+        cp "$APK_PATH" ./app-debug.apk
+        ls -la app-debug.apk
 
     - name: Upload Debug APK
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
-        path: XiaoAnAssistant/app/build/outputs/apk/debug/app-debug.apk
-      if: always()
+        path: app-debug.apk
+
+    - name: Create Release with APK
+      uses: softprops/action-gh-release@v2
+      with:
+        files: app-debug.apk
+        tag_name: build-${{ github.run_number }}
+        name: Build #${{ github.run_number }}
+        body: |
+          小安助手 (XiaoAnAssistant) Android APK
+          Build: ${{ github.run_number }}
+          Commit: ${{ github.sha }}
+        draft: false
+        prerelease: false
