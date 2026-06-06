@@ -37,11 +37,17 @@ jobs:
         echo "sdk.dir=$ANDROID_HOME" > local.properties
         cat local.properties
 
-    - name: Build Debug APK
+    - name: Configure Gradle JVM args via gradle.properties
       working-directory: XiaoAnAssistant
       run: |
-        export GRADLE_OPTS="-Xmx2g -Dorg.gradle.daemon=false"
-        ./gradlew assembleDebug --no-daemon
+        if ! grep -q "org.gradle.jvmargs" gradle.properties; then
+          echo "org.gradle.jvmargs=-Xmx2g -XX:MaxMetaspaceSize=512m -Dfile.encoding=UTF-8" >> gradle.properties
+        fi
+        cat gradle.properties
+
+    - name: Build Debug APK
+      working-directory: XiaoAnAssistant
+      run: ./gradlew assembleDebug --no-daemon
 
     - name: Copy APK to root
       run: |
