@@ -28,46 +28,27 @@ jobs:
         chmod +x gradlew
         ls -la gradlew
 
-    - name: Check local.properties (auto-generate if missing)
+    - name: Check local.properties
       working-directory: XiaoAnAssistant
       run: |
-        if [ ! -f local.properties ]; then
-          echo "sdk.dir=$ANDROID_HOME" > local.properties
-          cat local.properties
-        fi
+        echo "sdk.dir=$ANDROID_HOME" > local.properties
+        cat local.properties
 
     - name: Build Debug APK
       working-directory: XiaoAnAssistant
-      run: ./gradlew assembleDebug --no-daemon
-
-    - name: Find APK file
-      id: find_apk
       run: |
-        echo "=== Searching for APK ==="
-        find XiaoAnAssistant -name "*.apk" -type f
-        APK_PATH=$(find XiaoAnAssistant -name "app-debug.apk" -type f | head -1)
-        echo "apk_path=$APK_PATH" >> $GITHUB_OUTPUT
-        echo "APK_PATH=$APK_PATH"
-        ls -la "$APK_PATH"
-        # Copy to root for easy access
-        cp "$APK_PATH" ./app-debug.apk
-        ls -la app-debug.apk
+        echo "=== Build start ==="
+        ./gradlew assembleDebug --no-daemon --stacktrace 2>&1
+        echo "=== Build end ==="
+        echo "=== Find APK ==="
+        find . -name "*.apk" -type f
+        echo "=== Copy APK to root ==="
+        cp app/build/outputs/apk/debug/app-debug.apk ../app-debug.apk || echo "Copy failed"
+        ls -la ../app-debug.apk
 
     - name: Upload Debug APK
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
         path: app-debug.apk
-
-    - name: Create Release with APK
-      uses: softprops/action-gh-release@v2
-      with:
-        files: app-debug.apk
-        tag_name: build-${{ github.run_number }}
-        name: Build #${{ github.run_number }}
-        body: |
-          小安助手 (XiaoAnAssistant) Android APK
-          Build: ${{ github.run_number }}
-          Commit: ${{ github.sha }}
-        draft: false
-        prerelease: false
+      if: always()
