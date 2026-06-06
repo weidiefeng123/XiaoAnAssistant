@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小安助手 - 下载页面</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1565C0 0%, #1976D2 50%, #42A5F5 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .logo {
+            font-size: 72px;
+            margin-bottom: 16px;
+        }
+        h1 {
+            color: #1976D2;
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            color: #757575;
+            font-size: 18px;
+            margin-bottom: 32px;
+        }
+        .qr-section {
+            background: #F5F5F5;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .qr-section h3 {
+            color: #424242;
+            margin-bottom: 16px;
+            font-size: 18px;
+        }
+        .qr-code {
+            display: inline-block;
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .qr-code canvas {
+            display: block;
+        }
+        .download-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #1976D2, #1565C0);
+            color: white;
+            padding: 16px 48px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(25,118,210,0.4);
+        }
+        .download-btn.secondary {
+            background: linear-gradient(135deg, #FF6F00, #E65100);
+        }
+        .features {
+            text-align: left;
+            margin-top: 32px;
+        }
+        .features h3 {
+            color: #1976D2;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 0;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+        .feature-icon {
+            font-size: 24px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        .feature-text {
+            text-align: left;
+        }
+        .feature-text strong {
+            color: #424242;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .feature-text span {
+            color: #757575;
+            font-size: 14px;
+        }
+        .instructions {
+            background: #E3F2FD;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+            text-align: left;
+        }
+        .instructions h4 {
+            color: #1565C0;
+            margin-bottom: 12px;
+        }
+        .instructions ol {
+            padding-left: 20px;
+            color: #424242;
+            line-height: 1.8;
+        }
+        .instructions code {
+            background: #BBDEFB;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .note {
+            background: #FFF3E0;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+            text-align: left;
+        }
+        .note h4 {
+            color: #E65100;
+            margin-bottom: 8px;
+        }
+        .note p {
+            color: #795548;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🎙️</div>
+        <h1>小安助手</h1>
+        <p class="subtitle">智能语音助手 - Android 版</p>
+
+        <div class="qr-section">
+            <h3>扫描二维码获取项目信息</h3>
+            <div class="qr-code">
+                <img src="qrcode_download.png" alt="下载二维码" width="200" height="200" />
+            </div>
+            <p style="color:#757575; font-size:14px; margin-top:12px;">
+                扫描后获取小安助手项目信息
+            </p>
+        </div>
+
+        <div>
+            <a class="download-btn" id="downloadSource" href="#">
+                📦 下载源码 ZIP
+            </a>
+            <a class="download-btn secondary" id="downloadApk" href="#">
+                📱 下载 APK
+            </a>
+        </div>
+
+        <div class="features">
+            <h3>核心功能</h3>
+            <div class="feature-item">
+                <span class="feature-icon">🔐</span>
+                <div class="feature-text">
+                    <strong>登录功能</strong>
+                    <span>用户名+密码登录，任意输入即可进入</span>
+                </div>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">🗣️</span>
+                <div class="feature-text">
+                    <strong>语音唤醒</strong>
+                    <span>说出"小安小安"自动唤醒，回复"你好，我在"</span>
+                </div>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">🎤</span>
+                <div class="feature-text">
+                    <strong>ASR 语音识别</strong>
+                    <span>实时识别语音内容，显示在屏幕上</span>
+                </div>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">🔊</span>
+                <div class="feature-text">
+                    <strong>TTS 语音合成</strong>
+                    <span>助手回答通过语音朗读出来</span>
+                </div>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">💬</span>
+                <div class="feature-text">
+                    <strong>语音对话</strong>
+                    <span>支持连续语音对话，文字同步显示</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h4>📋 构建安装步骤</h4>
+            <ol>
+                <li>下载并安装 <strong>Android Studio</strong></li>
+                <li>打开项目，等待 Gradle 同步完成</li>
+                <li>连接安卓平板（开启 USB 调试模式）</li>
+                <li>点击 Run 按钮或执行 <code>./gradlew assembleDebug</code></li>
+                <li>APK 输出路径：<code>app/build/outputs/apk/debug/</code></li>
+                <li>安装：<code>adb install app-debug.apk</code></li>
+            </ol>
+        </div>
+
+        <div class="note">
+            <h4>⚠️ 注意事项</h4>
+            <p>
+                • 语音识别功能需要联网（使用 Google 语音服务或国内语音输入法）<br>
+                • 需要授予麦克风录音权限<br>
+                • 建议在平板上安装 Google 语音搜索或讯飞语音输入法<br>
+                • APK 文件需要自行构建生成
+            </p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script>
+        // 生成二维码 - 指向本地项目说明
+        const qrText = 'XiaoAnAssistant-智能语音助手-请下载源码后使用Android Studio构建APK';
+        
+        QRCode.toCanvas(document.getElementById('qrCanvas'), qrText, {
+            width: 200,
+            margin: 1,
+            color: {
+                dark: '#1976D2',
+                light: '#FFFFFF'
+            }
+        }, function(error) {
+            if (error) console.error(error);
+        });
+
+        // 下载源码按钮
+        document.getElementById('downloadSource').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('请将本项目文件夹 XiaoAnAssistant 压缩为 ZIP 文件，或使用 git clone 下载源码。\n\n然后用 Android Studio 打开项目构建 APK。');
+        });
+
+        // 下载APK按钮
+        document.getElementById('downloadApk').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('APK 需要您自行构建。\n\n步骤：\n1. 用 Android Studio 打开项目\n2. 执行 Build > Build APK(s)\n3. APK 位于 app/build/outputs/apk/debug/\n4. 将 APK 传输到平板安装即可');
+        });
+    </script>
+</body>
+</html>

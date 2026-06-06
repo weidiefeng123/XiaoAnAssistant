@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">小安助手</string>
+    <string name="login_title">小安助手</string>
+    <string name="login_subtitle">智能语音助手</string>
+    <string name="hint_username">请输入用户名</string>
+    <string name="hint_password">请输入密码</string>
+    <string name="btn_login">登 录</string>
+    <string name="welcome_message">你好，%s！欢迎使用小安助手</string>
+    <string name="voice_prompt">点击麦克风开始语音对话</string>
+    <string name="wakeup_hint">说出"小安小安"唤醒我</string>
+    <string name="btn_start_listening">开始语音</string>
+    <string name="btn_stop_listening">停止语音</string>
+</resources>
