@@ -22,11 +22,15 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Make gradlew executable
+    - name: Install dos2unix
+      run: sudo apt-get install -y dos2unix
+
+    - name: Convert line endings (fix CRLF -> LF)
       working-directory: XiaoAnAssistant
       run: |
+        dos2unix gradlew gradlew.bat
         chmod +x gradlew
-        ls -la gradlew
+        file gradlew
 
     - name: Check local.properties
       working-directory: XiaoAnAssistant
@@ -36,15 +40,13 @@ jobs:
 
     - name: Build Debug APK
       working-directory: XiaoAnAssistant
+      run: ./gradlew assembleDebug --no-daemon
+
+    - name: Copy APK to root
       run: |
-        echo "=== Build start ==="
-        ./gradlew assembleDebug --no-daemon --stacktrace 2>&1
-        echo "=== Build end ==="
-        echo "=== Find APK ==="
-        find . -name "*.apk" -type f
-        echo "=== Copy APK to root ==="
-        cp app/build/outputs/apk/debug/app-debug.apk ../app-debug.apk || echo "Copy failed"
-        ls -la ../app-debug.apk
+        find XiaoAnAssistant -name "app-debug.apk" -type f
+        cp XiaoAnAssistant/app/build/outputs/apk/debug/app-debug.apk ./app-debug.apk
+        ls -la app-debug.apk
 
     - name: Upload Debug APK
       uses: actions/upload-artifact@v4
