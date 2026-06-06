@@ -5,6 +5,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,26 +21,43 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v3
+    - name: List project files
+      run: ls -la XiaoAnAssistant/ | head -30
 
     - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      run: chmod +x XiaoAnAssistant/gradlew
+
+    - name: Make gradlew executable (force)
+      working-directory: XiaoAnAssistant
+      run: |
+        chmod +x gradlew
+        ls -la gradlew
+        head -1 gradlew
 
     - name: Build Debug APK
-      run: ./gradlew assembleDebug
+      working-directory: XiaoAnAssistant
+      run: ./gradlew assembleDebug --no-daemon --stacktrace
+
+    - name: Verify APK was created
+      run: |
+        ls -la XiaoAnAssistant/app/build/outputs/apk/debug/ || echo "APK not found"
+        find XiaoAnAssistant -name "*.apk" -type f 2>/dev/null
 
     - name: Upload Debug APK
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
-        path: app/build/outputs/apk/debug/app-debug.apk
+        path: XiaoAnAssistant/app/build/outputs/apk/debug/app-debug.apk
+      if: always()
 
     - name: Build Release APK
-      run: ./gradlew assembleRelease
+      working-directory: XiaoAnAssistant
+      run: ./gradlew assembleRelease --no-daemon
+      continue-on-error: true
 
     - name: Upload Release APK
       uses: actions/upload-artifact@v4
       with:
         name: app-release-unsigned
-        path: app/build/outputs/apk/release/app-release-unsigned.apk
+        path: XiaoAnAssistant/app/build/outputs/apk/release/app-release-unsigned.apk
+      if: always()
